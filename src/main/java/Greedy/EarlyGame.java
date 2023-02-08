@@ -5,12 +5,12 @@ import java.util.stream.*;
 
 import Enums.*;
 import Models.*;
-import Helper;
+import Greedy.Helper;
 
 public class EarlyGame {
     public int lowerHeadingBase;
     public int higherHeadingBase;
-    public bool specialSector;
+    public boolean specialSector;
 
     public int getLowerHeadingBase() {
         return this.lowerHeadingBase;
@@ -21,7 +21,7 @@ public class EarlyGame {
     }
 
     public int getSpecialSector() {
-        return this.specialSector;
+        return this.specialSector ? 1:0;
     }
 
     public void setFoodSector(GameState gameState, GameObject bot) {
@@ -39,21 +39,19 @@ public class EarlyGame {
     public PlayerAction getNearestFoodInSector (GameState gameState, GameObject bot) {
         Helper helper = new Helper(); 
 
-        PlayerAction playerAction;
+        PlayerAction playerAction = new PlayerAction();
         playerAction.heading = new Random().nextInt(360);
 
+        var foodList = gameState.getGameObjects().stream()
+                .filter(item -> (item.getGameObjectType() == ObjectTypes.FOOD || item.getGameObjectType() == ObjectTypes.SUPERFOOD))
+                .filter(item -> (this.higherHeadingBase > helper.getHeadingFromCenter(item) && helper.getHeadingFromCenter(item) >= this.lowerHeadingBase))
+                .sorted(Comparator.comparing(item -> helper.getDistanceBetween(bot, item)))
+                .collect(Collectors.toList());
         if (this.specialSector) {
-            var foodList = gameState.getGameObjects().stream()
+            foodList = gameState.getGameObjects().stream()
                        .filter(item -> (item.getGameObjectType() == ObjectTypes.FOOD || item.getGameObjectType() == ObjectTypes.SUPERFOOD))
                        .filter(item -> ((this.higherHeadingBase > helper.getHeadingFromCenter(item) && helper.getHeadingFromCenter(item) >= 0) || 
                                         (359 >= helper.getHeadingFromCenter(item) && helper.getHeadingFromCenter(item) > this.lowerHeadingBase)))
-                       .sorted(Comparator.comparing(item -> helper.getDistanceBetween(bot, item)))
-                       .collect(Collectors.toList());
-        }
-        else {
-            var foodList = gameState.getGameObjects().stream()
-                       .filter(item -> (item.getGameObjectType() == ObjectTypes.FOOD || item.getGameObjectType() == ObjectTypes.SUPERFOOD))
-                       .filter(item -> (this.higherHeadingBase > helper.getHeadingFromCenter(item) && helper.getHeadingFromCenter(item) >= this.lowerHeadingBase))
                        .sorted(Comparator.comparing(item -> helper.getDistanceBetween(bot, item)))
                        .collect(Collectors.toList());
         }

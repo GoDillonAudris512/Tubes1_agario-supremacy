@@ -73,5 +73,15 @@
             <artifactId>slf4j-simple</artifactId>
             <version>${slf4jVersion}</version>
         </dependency>
+        <dependency>
+            <groupId>com.apiomat.helper</groupId>
+            <artifactId>integration-test-helper</artifactId>
+            <version>1.7.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.netbout.helpers</groupId>
+            <artifactId>helper-shary</artifactId>
+            <version>0.1</version>
+        </dependency>
     </dependencies>
 </project>
