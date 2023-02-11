@@ -17,16 +17,6 @@ public class BotService {
     private GameObject target = null;
     private int prev_tick = -1;
 
-    private boolean isSizeEnough(int action) {
-        int cost;
-        if (action == PlayerActions.FIRETELEPORT.value) {
-            cost = TELE_COST;
-        } else {
-            cost = TORPEDO_COST;
-        }
-        return ((bot.size - cost) > SAFE_SIZE);
-    }
-
     public BotService() {
         this.playerAction = new PlayerAction();
         this.gameState = new GameState();
@@ -50,12 +40,34 @@ public class BotService {
 
     public void computeNextPlayerAction(PlayerAction playerAction) {
         if (!gameState.getGameObjects().isEmpty() && gameState.getWorld().getCurrentTick() > prev_tick) {
-            Avoid greedAlgo = new Avoid();
-            playerAction = greedAlgo.determineAction(gameState,playerAction,bot);
+            playerAction = bestAction(gameState,bot);
             prev_tick = gameState.getWorld().getCurrentTick();
         }
         this.playerAction = playerAction;
     }
+    
+    public PlayerAction bestAction(GameState gameState, GameObject bot) {
+        EarlyGame early = new EarlyGame();
+        MidGame mid = new MidGame();
+        Avoid avoid = new Avoid();
+
+        PlayerAction playerAction = new PlayerAction();
+
+        if (mid.bigShipInRadius(gameState, bot) && bot.torpedoSalvoCount > 2 && bot.getSize() > 18) {
+            playerAction = mid.stealSizeWithTorpedo(gameState, bot);
+        }
+        else {
+            if (early.botInSector(gameState, bot) && !early.getFoodInSector(gameState, bot).isEmpty()) {
+                playerAction = early.getNearestFoodInSector(gameState, bot);
+            }
+            else if (!early.getFoodInGame(gameState, bot).isEmpty()) {
+                playerAction = early.getNearestFood(gameState, bot);
+            }
+        }
+        playerAction = avoid.determineAction(gameState,playerAction,bot);
+        return playerAction;
+    }
+
     public GameState getGameState() {
         return this.gameState;
     }

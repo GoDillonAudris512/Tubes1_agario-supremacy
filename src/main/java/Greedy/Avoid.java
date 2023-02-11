@@ -56,24 +56,11 @@ public class Avoid {
 
     public PlayerAction determineAction(GameState gameState, PlayerAction playerAction, GameObject bot) {
         // Aksi yang lebih bawah memiliki prioritas lebih tinggi
-        playerAction = getNearestFood(gameState, playerAction, bot);
-        playerAction = fireTorpedo(gameState, playerAction, bot);
         playerAction = avoidNearestGasCloud(gameState, playerAction, bot);
         playerAction = avoidTorpedo(gameState, playerAction, bot);
         playerAction = avoidEdge(gameState, playerAction, bot);
         playerAction = avoidLargerEnemy(gameState, playerAction, bot);
         playerAction = teleport(gameState, playerAction, bot);
-        return playerAction;
-    }
-    // MEKANISME MAKAN MAKANAN TERDEKAT
-    public PlayerAction getNearestFood(GameState gameState, PlayerAction playerAction, GameObject bot) {
-        var foodList = gameState.getGameObjects().stream()
-                       .filter(item -> item.getGameObjectType() == ObjectTypes.FOOD)
-                       .sorted(Comparator.comparing(item -> getDistanceBetween(bot, item)))
-                       .collect(Collectors.toList());
-        
-        playerAction.action = PlayerActions.FORWARD;
-        playerAction.heading = getHeadingBetween(bot,foodList.get(0));
         return playerAction;
     }
 
@@ -84,7 +71,7 @@ public class Avoid {
                 .collect(Collectors.toList());
         if (!currTp.isEmpty()) {
             if (tp_reason == 1) {
-                if (getDistanceBetween(currTp.get(0),bot) > bot.getSize() * 2) {
+                if (getDistanceBetween(bot,currTp.get(0)) > bot.getSize() * 2) {
                     playerAction.action = PlayerActions.TELEPORT;
                     tp_reason = 0;
                     tp_heading = -999;
@@ -94,14 +81,6 @@ public class Avoid {
         return playerAction;
     }
 
-    public PlayerAction fireTorpedo(GameState gameState, PlayerAction playerAction, GameObject bot) {
-        if (thereIsBiggerShipsFar(gameState,bot) && bot.torpedoSalvoCount > 0 && bot.getSize() - 5 >= 20) {
-            var enemyList = gameStateToBigShipsFar(gameState,bot);
-            playerAction.heading = getHeadingBetween(bot,enemyList.get(0));
-            playerAction.action = PlayerActions.FIRETORPEDOES;
-        }
-        return playerAction;
-    }
     public PlayerAction avoidNearestGasCloud(GameState gameState, PlayerAction playerAction, GameObject bot) {
         var gasCloudList = gameState.getGameObjects().stream()
                 .filter(item -> item.getGameObjectType() == ObjectTypes.GASCLOUD)
@@ -109,11 +88,11 @@ public class Avoid {
                 .collect(Collectors.toList());
         if (!gasCloudList.isEmpty()) {
             if (bot.effects >= 4) {
-                playerAction.heading = -getHeadingBetween(bot,gasCloudList.get(0));
+                playerAction.heading = -getHeadingBetween(gasCloudList.get(0),bot);
                 playerAction.action = PlayerActions.FORWARD;
             }
             else if (getDistanceBetween(bot,gasCloudList.get(0)) < bot.getSize()*1.5) {
-                playerAction.heading = (getHeadingBetween(bot,gasCloudList.get(0))+45) % 360;
+                playerAction.heading = (getHeadingBetween(gasCloudList.get(0),bot)+45) % 360;
                 playerAction.action = PlayerActions.FORWARD;
             }
         }
@@ -123,7 +102,7 @@ public class Avoid {
     public PlayerAction avoidLargerEnemy(GameState gameState, PlayerAction playerAction, GameObject bot) {
         if (thereIsBiggerShipsNear(gameState,bot)) {
             var enemyList = gameStateToBigShipsNear(gameState,bot);
-            playerAction.heading = -getHeadingBetween(bot,enemyList.get(0));
+            playerAction.heading = -getHeadingBetween(enemyList.get(0),bot);
             if (bot.teleporterCount > 0 && bot.getSize()-20 > 15) {
                 playerAction.action = PlayerActions.FIRETELEPORT;
                 tp_reason = 1;
@@ -151,13 +130,12 @@ public class Avoid {
                 .sorted(Comparator.comparing(item -> getDistanceBetween(bot, item)))
                 .collect(Collectors.toList());
         if (!torpedoList.isEmpty()) {
-            int closestTorpedoHeading = (torpedoList.get(0).currentHeading + 180) % 360;
             int headingBotWTorpedo = getHeadingBetween(torpedoList.get(0),bot);
-            if ((closestTorpedoHeading <= (headingBotWTorpedo + 30) % 360 && closestTorpedoHeading >= ((headingBotWTorpedo - 30) + 360) % 360 && getDistanceBetween(torpedoList.get(0), bot) < bot.getSize()*1.2)) {
+            if (getDistanceBetween(torpedoList.get(0), bot) < bot.getSize()*1.2) {
                 if (bot.shieldCount > 0 && bot.getSize()-20 >= 15) {
                     playerAction.action = PlayerActions.ACTIVATESHIELD;
                 }
-                else if (bot.torpedoSalvoCount > 0 && bot.getSize()-5 >= 15) {
+                else if (bot.torpedoSalvoCount > 0 && bot.getSize()-10 >= 15) {
                     playerAction.heading = headingBotWTorpedo;
                     playerAction.action = PlayerActions.FIRETORPEDOES;
                 }
