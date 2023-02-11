@@ -1,6 +1,7 @@
 package Services;
 
 import Enums.*;
+import Greedy.*;
 import Models.*;
 
 import java.util.*;
@@ -10,6 +11,8 @@ public class BotService {
     private GameObject bot;
     private PlayerAction playerAction;
     private GameState gameState;
+    private LocalState localState = new LocalState();
+    private boolean init = false;
 
     public BotService() {
         this.playerAction = new PlayerAction();
@@ -34,20 +37,18 @@ public class BotService {
     }
 
     public void computeNextPlayerAction(PlayerAction playerAction) {
-        playerAction.action = PlayerActions.FORWARD;
-        playerAction.heading = new Random().nextInt(360);
+        Greedy greedy = new Greedy();
+        EarlyGame early = new EarlyGame();
 
-        if (!gameState.getGameObjects().isEmpty()) {
-            var foodList = gameState.getGameObjects()
-                    .stream().filter(item -> item.getGameObjectType() == ObjectTypes.FOOD)
-                    .sorted(Comparator
-                            .comparing(item -> getDistanceBetween(bot, item)))
-                    .collect(Collectors.toList());
-
-            playerAction.heading = getHeadingBetween(foodList.get(0));
+        if (!init && !gameState.getPlayerGameObjects().isEmpty()) {
+            early.setFoodSector(gameState, bot, localState); 
+            System.out.printf("%d %d", localState.higherHeadingBase, localState.lowerHeadingBase);   
+            init = true;
         }
 
-        this.playerAction = playerAction;
+        if (!gameState.getGameObjects().isEmpty() && !gameState.getPlayerGameObjects().isEmpty()) {
+            this.playerAction = greedy.bestAction(gameState, bot, localState);
+        }
     }
 
     public GameState getGameState() {

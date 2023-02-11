@@ -7,33 +7,33 @@ import Enums.*;
 import Models.*;
 
 public class EarlyGame {
-    public void setFoodSector(GameState gameState, GameObject bot) {
+    public void setFoodSector(GameState gameState, GameObject bot, LocalState localState) {
         Helper helper = new Helper();
         
         int relativeAngleToCenter = helper.getHeadingFromCenter(bot);
         Integer halfSectorAngle = (int) (360 / (2*gameState.getPlayerGameObjects().size()));
         
-        gameState.lowerHeadingBase = ((relativeAngleToCenter - halfSectorAngle) + 360) % 360;
-        gameState.higherHeadingBase = ((relativeAngleToCenter + halfSectorAngle) + 360) % 360;
-        gameState.specialSector = gameState.higherHeadingBase < gameState.lowerHeadingBase ? true : false;
+        localState.lowerHeadingBase = ((relativeAngleToCenter - halfSectorAngle) + 360) % 360;
+        localState.higherHeadingBase = ((relativeAngleToCenter + halfSectorAngle) + 360) % 360;
+        localState.specialSector = localState.higherHeadingBase < localState.lowerHeadingBase;
     }
 
-    public List<GameObject> getFoodInSector (GameState gameState, GameObject bot) {
+    public List<GameObject> getFoodInSector (GameState gameState, GameObject bot, LocalState localState) {
         Helper helper = new Helper();
         List<GameObject> foodList;
 
-        if (gameState.specialSector) {
+        if (localState.specialSector) {
             foodList = gameState.getGameObjects().stream()
                        .filter(item -> (item.getGameObjectType() == ObjectTypes.FOOD || item.getGameObjectType() == ObjectTypes.SUPERFOOD))
-                       .filter(item -> ((gameState.higherHeadingBase > helper.getHeadingFromCenter(item) && helper.getHeadingFromCenter(item) >= 0) || 
-                                        (359 >= helper.getHeadingFromCenter(item) && helper.getHeadingFromCenter(item) > gameState.lowerHeadingBase)))
+                       .filter(item -> ((localState.higherHeadingBase > helper.getHeadingFromCenter(item) && helper.getHeadingFromCenter(item) >= 0) || 
+                                        (359 >= helper.getHeadingFromCenter(item) && helper.getHeadingFromCenter(item) > localState.lowerHeadingBase)))
                        .sorted(Comparator.comparing(item -> helper.getDistanceBetween(bot, item)))
                        .collect(Collectors.toList());
         }
         else {
             foodList = gameState.getGameObjects().stream()
                        .filter(item -> (item.getGameObjectType() == ObjectTypes.FOOD || item.getGameObjectType() == ObjectTypes.SUPERFOOD))
-                       .filter(item -> (gameState.higherHeadingBase > helper.getHeadingFromCenter(item) && helper.getHeadingFromCenter(item) >= gameState.lowerHeadingBase))
+                       .filter(item -> (localState.higherHeadingBase > helper.getHeadingFromCenter(item) && helper.getHeadingFromCenter(item) >= localState.lowerHeadingBase))
                        .sorted(Comparator.comparing(item -> helper.getDistanceBetween(bot, item)))
                        .collect(Collectors.toList());
         }
@@ -53,9 +53,9 @@ public class EarlyGame {
         return foodList;
     }
 
-    public PlayerAction getNearestFoodInSector (GameState gameState, GameObject bot) {
+    public PlayerAction getNearestFoodInSector (GameState gameState, GameObject bot, LocalState localState) {
         Helper helper = new Helper(); 
-        List<GameObject> foodList = getFoodInSector(gameState, bot);
+        List<GameObject> foodList = getFoodInSector(gameState, bot, localState);
 
         PlayerAction playerAction = new PlayerAction();
         playerAction.action =  PlayerActions.FORWARD;
@@ -75,16 +75,16 @@ public class EarlyGame {
         return playerAction;
     }
 
-    public boolean botInSector(GameState gameState, GameObject bot) {
+    public boolean botInSector(GameState gameState, GameObject bot, LocalState localState) {
         Helper helper = new Helper();
         int headingFromCenter = helper.getHeadingFromCenter(bot);
         
-        if (gameState.specialSector) {
-            return (gameState.higherHeadingBase > headingFromCenter && headingFromCenter >= 0) || 
-                   (359 >= headingFromCenter && headingFromCenter > gameState.lowerHeadingBase);
+        if (localState.specialSector) {
+            return (localState.higherHeadingBase > headingFromCenter && headingFromCenter >= 0) || 
+                   (359 >= headingFromCenter && headingFromCenter > localState.lowerHeadingBase);
         }
         else {
-            return (gameState.higherHeadingBase > headingFromCenter && headingFromCenter >= gameState.lowerHeadingBase);
+            return (localState.higherHeadingBase > headingFromCenter && headingFromCenter >= localState.lowerHeadingBase);
         }
     }
 }
