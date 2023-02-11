@@ -7,53 +7,30 @@ import java.util.*;
 import java.util.stream.*;
 
 public class MidGame {
-    private boolean bigShipInRadius(GameState gameState, GameObject bot) {
-        Greedy greedy = new Greedy();
-        boolean bigNear = false;
-        List<GameObject> enemies = gameState.getGameObjects().stream()
-            .filter(item -> item.getId() != bot.getId())
-            .filter(item -> item.getSize() >= bot.getSize())
-            .filter(item -> greedy.getDistanceBetween(item, bot) - item.getSize() - bot.getSize() < 20)
-            .collect(Collectors.toList());
-        if (!enemies.isEmpty()) {
-            bigNear = true;
-        }
-        return bigNear;
+    private List<GameObject> getListOfNearShips(GameState gameState, GameObject bot) {
+        Helper helper = new Helper();
+        return gameState.getPlayerGameObjects().stream()
+               .filter(item -> item.getId() != bot.getId())
+               .filter(item -> item.getSize() >= bot.getSize())
+               .filter(item -> helper.getDistanceBetween(item, bot) - item.getSize() - bot.getSize() < 100)
+               .sorted(Comparator.comparing(item -> helper.getDistanceBetween(item, bot)))
+               .collect(Collectors.toList());
     }
 
-    public GameObject findNearestEnemy(List<GameObject> enemies, GameObject bot) {
-        Greedy greedy = new Greedy();
-        GameObject nearestEnemy = enemies.get(0);
-        double min = greedy.getDistanceBetween(enemies.get(0), bot) - enemies.get(0).getSize() - bot.getSize();
-
-        for (int i = 0; i < enemies.size(); i++) {
-            if ((greedy.getDistanceBetween(enemies.get(i), bot) - enemies.get(i).getSize() - bot.getSize()) < min) {
-                nearestEnemy = enemies.get(i);
-            }
-        }
-        return nearestEnemy;
+    public boolean bigShipInRadius(GameState gameState, GameObject bot) {
+        return !getListOfNearShips(gameState, bot).isEmpty();    
     }
 
     public PlayerAction stealSizeWithTorpedo(GameState gameState, GameObject bot) {
         PlayerAction playerAction = new PlayerAction();
-        GameObject nearestEnemy;
-        Greedy greedy = new Greedy();
-        List<GameObject> enemies = gameState.getGameObjects().stream()
-            .filter(item -> item.getId() != bot.getId())
-            .filter(item -> item.getSize() >= bot.getSize())
-            .filter(item -> greedy.getDistanceBetween(item, bot) - item.getSize() - bot.getSize() < 12)
-            .collect(Collectors.toList());
+        Helper helper = new Helper();
 
-        nearestEnemy = findNearestEnemy(enemies, bot);
+        List<GameObject> enemies = getListOfNearShips(gameState, bot);
+        GameObject nearestEnemy = enemies.get(0);
 
-        if (bigShipInRadius(gameState, bot)) {
-            if (bot.size > 70) {
-                if (bot.torpedoSalvoCount > 2) {
-                    playerAction.heading = greedy.getHeadingBetween(nearestEnemy, bot);
-                    playerAction.action = PlayerActions.FIRETORPEDOES;
-                }
-            }
-        }
+        playerAction.action = PlayerActions.FIRETORPEDOES;
+        playerAction.heading = helper.getHeadingBetween(nearestEnemy, bot);
+        
         return playerAction;
     }
 }
