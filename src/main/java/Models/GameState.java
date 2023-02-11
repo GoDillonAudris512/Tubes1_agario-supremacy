@@ -7,6 +7,21 @@ public class GameState {
     public World world;
     public List<GameObject> gameObjects;
     public List<GameObject> playerGameObjects;
+    public int lowerHeadingBase;
+    public int higherHeadingBase;
+    public boolean specialSector;
+
+    public int getLowerHeadingBase() {
+        return this.lowerHeadingBase;
+    }
+
+    public int getHigherHeadingBase() {
+        return this.higherHeadingBase;
+    }
+
+    public boolean getSpecialSector() {
+        return this.specialSector;
+    } 
 
     public GameState() {
         world = new World();
