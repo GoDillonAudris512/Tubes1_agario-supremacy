@@ -42,7 +42,6 @@ public class BotService {
 
         if (!init && !gameState.getPlayerGameObjects().isEmpty()) {
             early.setFoodSector(gameState, bot, localState);
-            System.out.printf("%d %d", localState.higherHeadingBase, localState.lowerHeadingBase);
             init = true;
         }
 
