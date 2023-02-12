@@ -12,7 +12,7 @@ public class MidGame {
         return gameState.getPlayerGameObjects().stream()
                .filter(item -> item.getId() != bot.getId())
                .filter(item -> item.getSize() >= bot.getSize())
-               .filter(item -> helper.getDistanceBetween(item, bot) - item.getSize() - bot.getSize() < 100)
+               .filter(item -> helper.getDistanceBetween(item, bot) - item.getSize() - bot.getSize() < 200)
                .sorted(Comparator.comparing(item -> helper.getDistanceBetween(item, bot)))
                .collect(Collectors.toList());
     }
