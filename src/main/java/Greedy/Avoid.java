@@ -25,7 +25,7 @@ public class Avoid {
                 .collect(Collectors.toList());
         if (!gasCloudList.isEmpty()) {
             if (Greedy.getDistanceBetween(bot,gasCloudList.get(0)) <= bot.getSize()*1.1 + gasCloudList.get(0).size) {
-                playerAction.heading = (Greedy.getHeadingBetween(gasCloudList.get(0),bot)+45) % 360;
+                playerAction.heading = -Greedy.getHeadingBetween(gasCloudList.get(0),bot);
                 playerAction.action = PlayerActions.FORWARD;
             }
         }
