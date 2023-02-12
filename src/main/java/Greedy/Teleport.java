@@ -3,13 +3,11 @@ package Greedy;
 import java.util.*;
 import java.util.stream.*;
 
-import javax.sound.sampled.BooleanControl;
-
 import Enums.*;
 import Models.*;
 
-public class LateGame {
-    private List<GameObject> getListOfSmallEnemies(GameState gameState, GameObject bot) {
+public class Teleport {
+    static private List<GameObject> getListOfSmallEnemies(GameState gameState, GameObject bot) {
         return gameState.getPlayerGameObjects().stream()
                 .filter(item -> (item.getId() != bot.getId()))
                 .filter(item -> (item.getSize() < bot.getSize()-30))
@@ -17,16 +15,16 @@ public class LateGame {
                 .collect(Collectors.toList());
     }
 
-    private GameObject getTargetedEnemies(GameState gameState, GameObject bot) {
+    static private GameObject getTargetedEnemies(GameState gameState, GameObject bot) {
         var enemiesList = getListOfSmallEnemies(gameState, bot);
         return enemiesList.get(enemiesList.size()-1);
     }
 
-    public boolean thereIsSmallerEnemies(GameState gameState, GameObject bot) {
+    static public boolean thereIsSmallerEnemies(GameState gameState, GameObject bot) {
         return !getListOfSmallEnemies(gameState, bot).isEmpty();
     }
 
-    public boolean isBotTheBiggest(GameState gameState, GameObject bot) {
+    static public boolean isBotTheBiggest(GameState gameState, GameObject bot) {
         var player = gameState.getPlayerGameObjects().stream()
                 .sorted(Comparator.comparing(item -> item.getSize()))
                 .collect(Collectors.toList());
@@ -34,7 +32,7 @@ public class LateGame {
         return player.get(player.size()-1).getId() == bot.getId();
     }
 
-    public PlayerAction fireTeleporterToEnemies(GameState gameState, GameObject bot, LocalState localState) {
+    static public PlayerAction fireTeleporterToEnemies(GameState gameState, GameObject bot, LocalState localState) {
         Helper helper = new Helper();
         PlayerAction playerAction = new PlayerAction();
         GameObject target = getTargetedEnemies(gameState, bot);
@@ -57,22 +55,23 @@ public class LateGame {
         localState.teleporterFired = true;
         localState.teleporterStillNotAppear = true;
         localState.teleporterHeading = playerAction.heading;
+        localState.tpReason = 1;
 
         return playerAction;
     }
 
-    private List<GameObject> findTeleporter(GameState gameState, LocalState localState) {
+    static private List<GameObject> findTeleporter(GameState gameState, LocalState localState) {
         return gameState.getGameObjects().stream()
                 .filter(item -> (item.getGameObjectType() == ObjectTypes.TELEPORTER))
                 .filter(item -> (item.currentHeading == localState.teleporterHeading))
                 .collect(Collectors.toList());
     }
 
-    public boolean teleporterStillInWorld(GameState gameState, LocalState localState) {
+    static public boolean teleporterStillInWorld(GameState gameState, LocalState localState) {
         return !findTeleporter(gameState, localState).isEmpty();
     }
 
-    public boolean thereIsSmallerEnemiesAroundTeleporter(GameState gameState, GameObject bot, LocalState localState) {
+    static public boolean thereIsSmallerEnemiesAroundTeleporter(GameState gameState, GameObject bot, LocalState localState) {
         Helper helper = new Helper();
 
         GameObject teleporter = findTeleporter(gameState, localState).get(0);
@@ -84,7 +83,19 @@ public class LateGame {
         return !enemies.isEmpty();
     }
 
-    public PlayerAction teleportToTeleporter(GameState gameState, GameObject bot, LocalState localState) {
+    static public boolean thereIsNoLargerEnemiesAroundTeleporter(GameState gameState, GameObject bot, LocalState localState) {
+        Helper helper = new Helper();
+
+        GameObject teleporter = findTeleporter(gameState, localState).get(0);
+        var enemies = gameState.getPlayerGameObjects().stream()
+                .filter(item -> (item.getSize() > bot.getSize()))
+                .filter(item -> (helper.getDistanceBetween(teleporter, item) - bot.getSize() - item.getSize() < 0))
+                .collect(Collectors.toList());
+
+        return enemies.isEmpty();
+    }
+
+    static public PlayerAction teleportToTeleporter(GameState gameState, GameObject bot, LocalState localState) {
         PlayerAction playerAction = new PlayerAction();
         Helper helper = new Helper();
 
@@ -104,6 +115,7 @@ public class LateGame {
 
         localState.teleporterFired = false;
         localState.teleporterStillNotAppear = true;
+        localState.tpReason = 0;
 
         return playerAction;
     }

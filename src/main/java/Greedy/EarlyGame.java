@@ -25,6 +25,7 @@ public class EarlyGame {
         if (localState.specialSector) {
             foodList = gameState.getGameObjects().stream()
                     .filter(item -> (item.getGameObjectType() == ObjectTypes.FOOD || item.getGameObjectType() == ObjectTypes.SUPERFOOD))
+                    .filter(item -> (helper.getDistanceFromCenter(item) / (float) gameState.getWorld().getRadius() <= 0.9))
                     .filter(item -> ((localState.higherHeadingBase > helper.getHeadingFromCenter(item) && helper.getHeadingFromCenter(item) >= 0) ||
                             (359 >= helper.getHeadingFromCenter(item) && helper.getHeadingFromCenter(item) > localState.lowerHeadingBase)))
                     .sorted(Comparator.comparing(item -> helper.getDistanceBetween(bot, item)))
@@ -33,6 +34,7 @@ public class EarlyGame {
         else {
             foodList = gameState.getGameObjects().stream()
                     .filter(item -> (item.getGameObjectType() == ObjectTypes.FOOD || item.getGameObjectType() == ObjectTypes.SUPERFOOD))
+                    .filter(item -> (helper.getDistanceFromCenter(item) / (float) gameState.getWorld().getRadius() <= 0.9))
                     .filter(item -> (localState.higherHeadingBase > helper.getHeadingFromCenter(item) && helper.getHeadingFromCenter(item) >= localState.lowerHeadingBase))
                     .sorted(Comparator.comparing(item -> helper.getDistanceBetween(bot, item)))
                     .collect(Collectors.toList());
@@ -47,6 +49,7 @@ public class EarlyGame {
 
         foodList = gameState.getGameObjects().stream()
                 .filter(item -> (item.getGameObjectType() == ObjectTypes.FOOD || item.getGameObjectType() == ObjectTypes.SUPERFOOD))
+                .filter(item -> (helper.getDistanceFromCenter(item) / (float) gameState.getWorld().getRadius() <= 0.9))
                 .sorted(Comparator.comparing(item -> helper.getDistanceBetween(bot, item)))
                 .collect(Collectors.toList());
 

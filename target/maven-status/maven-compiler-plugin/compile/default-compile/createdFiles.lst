@@ -1,8 +1,11 @@
+Models\LocalState.class
 Greedy\Avoid.class
 Enums\ObjectTypes.class
 Models\PlayerAction.class
+Greedy\Teleport.class
 Models\GameObject.class
 Greedy\EarlyGame.class
+Greedy\Greedy.class
 Main.class
 Enums\PlayerActions.class
 Greedy\MidGame.class

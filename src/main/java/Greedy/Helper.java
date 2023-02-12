@@ -13,6 +13,12 @@ public class Helper {
         return Math.sqrt(triangleX * triangleX + triangleY * triangleY);
     }
 
+    public double getDistanceFromCenter (GameObject item) {
+        var triangleX = Math.abs(item.getPosition().x);
+        var triangleY = Math.abs(item.getPosition().y);
+        return Math.sqrt(triangleX * triangleX + triangleY * triangleY);
+    }
+
     public int getHeadingBetween(GameObject other, GameObject bot) {
         var direction = toDegrees(Math.atan2(other.getPosition().y - bot.getPosition().y,
                 other.getPosition().x - bot.getPosition().x));
