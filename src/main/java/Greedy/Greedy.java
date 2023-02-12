@@ -16,39 +16,51 @@ public class Greedy {
                .collect(Collectors.toList());
     }
 
-    public double getDistanceBetween(GameObject object1, GameObject object2) {
-        var triangleX = Math.abs(object1.getPosition().x - object2.getPosition().x);
-        var triangleY = Math.abs(object1.getPosition().y - object2.getPosition().y);
-        return Math.sqrt(triangleX * triangleX + triangleY * triangleY);
-    }
-
-    public int getHeadingBetween(GameObject other, GameObject bot) {
-        var direction = toDegrees(Math.atan2(other.getPosition().y - bot.getPosition().y,
-                other.getPosition().x - bot.getPosition().x));
-        return (direction + 360) % 360;
-    }
-
-    public int toDegrees(double v) {
-        return (int) (v * (180 / Math.PI));
-    }
-
     // MEKANISME MENGHINDARI KAPAL MUSUH YANG BESAR
     public boolean thereIsBiggerShipsNear(GameState gameState, GameObject bot) {
         return !gameStateToBigShipsNear(gameState, bot).isEmpty();
     }
 
-    // MEKANISME MAKAN MAKANAN TERDEKAT
-    public void getNearestFood(GameState gameState, PlayerAction playerAction, GameObject bot) {
-        var foodList = gameState.getGameObjects().stream()
-                       .filter(item -> item.getGameObjectType() == ObjectTypes.FOOD)
-                       .sorted(Comparator.comparing(item -> getDistanceBetween(bot, item)))
-                       .collect(Collectors.toList());
-        
-        playerAction.action = PlayerActions.FORWARD;
-        playerAction.heading = getHeadingBetween(foodList.get(0), bot);
+    public PlayerAction bestAction(GameState gameState, GameObject bot, LocalState localState) {
+        Helper helper = new Helper();
+        EarlyGame early = new EarlyGame();
+        MidGame mid = new MidGame();
+        LateGame late = new LateGame();
+
+        PlayerAction playerAction = new PlayerAction();
+
+        if (localState.teleporterFired) {
+            if (late.teleporterStillInWorld(gameState, localState)) {
+                localState.teleporterStillNotAppear = false;
+            }
+            else if (!localState.teleporterStillNotAppear) {
+                localState.teleporterFired = false;
+                localState.teleporterStillNotAppear = true;
+            }
+        }
+
+        if (!localState.teleporterStillNotAppear && late.thereIsSmallerEnemiesAroundTeleporter(gameState, bot, localState)) {
+            playerAction = late.teleportToTeleporter(gameState, bot, localState);
+        }
+        else if (late.isBotTheBiggest(gameState, bot) && late.thereIsSmallerEnemies(gameState, bot) && !localState.teleporterFired && bot.teleporterCount > 2 && bot.getSize() > 70){
+            playerAction = late.fireTeleporterToEnemies(gameState, bot, localState);
+        }
+        else if (mid.bigShipInRadius(gameState, bot) && bot.torpedoSalvoCount > 2 && bot.getSize() > 18) {
+            playerAction = mid.stealSizeWithTorpedo(gameState, bot);
+        }
+        else if (!early.getFoodInGame(gameState, bot).isEmpty) {
+            if (early.botInSector(gameState, bot, localState) && !early.getFoodInSector(gameState, bot, localState).isEmpty()) {
+                playerAction = early.getNearestFoodInSector(gameState, bot, localState);
+            }
+            else {
+                playerAction = early.getNearestFood(gameState, bot);
+            }
+        }
+        else {
+            playerAction.action = PlayerActions.FORWARD;
+            playerAction.heading = (helper.getHeadingFromCenter(bot) + 180) % 360;
+        }
+
+        return playerAction;
     }
-    // public Integer getBestDirectionBetweenShipsNear(GameState gameState, GameObject bot) {
-    //     var distanceList = gameStateToShipsNear(gameState, bot);
-    //     distanceList = distanceList.stream().filter()
-    // } 
 }
