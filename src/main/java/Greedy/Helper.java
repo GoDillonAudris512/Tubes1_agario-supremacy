@@ -20,10 +20,10 @@ public class Helper {
     }
 
     public int toDegrees(double v) {
-        return (int) (v * (180 / Math.PI));   
+        return (int) (v * (180 / Math.PI));
     }
 
     public int getHeadingFromCenter(GameObject other) {
-        return (toDegrees(Math.atan2(0 - other.getPosition().y, 0 - other.getPosition().x)) + 360) % 360;
+        return (toDegrees(Math.atan2(other.getPosition().y, other.getPosition().x)) + 360) % 360;
     }
 }
