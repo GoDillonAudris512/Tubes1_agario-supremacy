@@ -13,6 +13,7 @@ public class MidGame {
                .filter(item -> item.getId() != bot.getId())
                .filter(item -> item.getSize() >= bot.getSize())
                .filter(item -> helper.getDistanceBetween(item, bot) - item.getSize() - bot.getSize() < 200)
+               .filter(item -> item.effects < 16)
                .sorted(Comparator.comparing(item -> helper.getDistanceBetween(item, bot)))
                .collect(Collectors.toList());
     }

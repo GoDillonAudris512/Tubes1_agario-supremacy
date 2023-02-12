@@ -1,11 +1,9 @@
 package Services;
 
-import Enums.*;
 import Greedy.*;
 import Models.*;
 
 import java.util.*;
-import java.util.stream.*;
 
 public class BotService {
     private GameObject bot;
@@ -37,7 +35,6 @@ public class BotService {
     }
 
     public void computeNextPlayerAction(PlayerAction playerAction) {
-        Greedy greedy = new Greedy();
         EarlyGame early = new EarlyGame();
 
         if (!init && !gameState.getPlayerGameObjects().isEmpty()) {
@@ -46,7 +43,7 @@ public class BotService {
         }
 
         if (!gameState.getGameObjects().isEmpty() && !gameState.getPlayerGameObjects().isEmpty()) {
-            this.playerAction = greedy.bestAction(gameState, bot, localState);
+            this.playerAction = Greedy.bestAction(gameState, bot, localState);
         }
     }
 

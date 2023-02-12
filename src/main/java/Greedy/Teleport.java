@@ -76,11 +76,16 @@ public class Teleport {
 
         GameObject teleporter = findTeleporter(gameState, localState).get(0);
         var enemies = gameState.getPlayerGameObjects().stream()
-                .filter(item -> (item.getSize() < bot.getSize()))
-                .filter(item -> (helper.getDistanceBetween(teleporter, item) - bot.getSize() - item.getSize() < 0))
-                .collect(Collectors.toList());
+                      .filter(item -> (item.getSize() < bot.getSize()))
+                      .filter(item -> (helper.getDistanceBetween(teleporter, item) - bot.getSize() - item.getSize() < 0))
+                      .collect(Collectors.toList());
 
-        return !enemies.isEmpty();
+        var gasClouds = gameState.getGameObjects().stream()
+                        .filter(item -> (item.getGameObjectType() == ObjectTypes.GASCLOUD))
+                        .filter(item -> (helper.getDistanceBetween(teleporter, item) - bot.getSize() < 0 ))
+                        .collect(Collectors.toList());
+            
+        return !enemies.isEmpty() && gasClouds.isEmpty();
     }
 
     static public boolean thereIsNoLargerEnemiesAroundTeleporter(GameState gameState, GameObject bot, LocalState localState) {

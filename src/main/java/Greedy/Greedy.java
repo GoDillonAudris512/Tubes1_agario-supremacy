@@ -57,10 +57,10 @@ public class Greedy {
         if (!localState.teleporterStillNotAppear && Teleport.thereIsSmallerEnemiesAroundTeleporter(gameState, bot, localState) && localState.tpReason == 1) {
             playerAction = Teleport.teleportToTeleporter(gameState, bot, localState);
         }
-        else if (Teleport.isBotTheBiggest(gameState, bot) && Teleport.thereIsSmallerEnemies(gameState, bot) && !localState.teleporterFired && bot.teleporterCount > 2 && bot.getSize() > 70){
+        else if (Teleport.isBotTheBiggest(gameState, bot) && Teleport.thereIsSmallerEnemies(gameState, bot) && !localState.teleporterFired && bot.teleporterCount > 0 && bot.getSize() > 70){
             playerAction = Teleport.fireTeleporterToEnemies(gameState, bot, localState);
         }
-        else if (mid.bigShipInRadius(gameState, bot) && bot.torpedoSalvoCount > 2 && bot.getSize() > 18) {
+        else if (mid.bigShipInRadius(gameState, bot) && bot.torpedoSalvoCount > 0 && bot.getSize() > 45) {
             playerAction = mid.stealSizeWithTorpedo(gameState, bot);
         }
         else if (!early.getFoodInGame(gameState, bot).isEmpty()) {
@@ -73,7 +73,15 @@ public class Greedy {
         }
         else {
             playerAction.action = PlayerActions.FORWARD;
-            playerAction.heading = (helper.getHeadingFromCenter(bot) + 180) % 360;
+            int headingToCenter = helper.getHeadingFromCenter(bot) + 180 % 360;
+            int higher = headingToCenter + 45;
+            int lower = (headingToCenter - 45 + 360) % 360;
+            if (higher > lower) {
+                playerAction.heading = new Random().nextInt(lower, higher);
+            }
+            else {
+                playerAction.heading = (new Random().nextInt(higher, lower+360)) % 360;
+            }
         }
 
         avoid.determineAction(gameState,playerAction,bot,localState);
