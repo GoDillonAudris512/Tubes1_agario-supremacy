@@ -7,37 +7,7 @@ import Enums.*;
 import Models.*;
 
 public class Greedy {
-    // METODE ANTARA
-    static public List<GameObject> gameStateToBigShipsNear (GameState gameState, GameObject bot) {
-        return gameState.getPlayerGameObjects().stream()
-                .filter(item -> item.getId() != bot.getId())
-                .filter(item -> item.getSize() >= bot.getSize())
-                .filter(item -> getDistanceBetween(item, bot) - item.getSize() - bot.getSize() <= 15)
-                .collect(Collectors.toList());
-    }
-
-    static public double getDistanceBetween(GameObject object1, GameObject object2) {
-        var triangleX = Math.abs(object1.getPosition().x - object2.getPosition().x);
-        var triangleY = Math.abs(object1.getPosition().y - object2.getPosition().y);
-        return Math.sqrt(triangleX * triangleX + triangleY * triangleY);
-    }
-
-    static public int getHeadingBetween(GameObject other, GameObject bot) {
-        var direction = toDegrees(Math.atan2(other.getPosition().y - bot.getPosition().y,
-                other.getPosition().x - bot.getPosition().x));
-        return (direction + 360) % 360;
-    }
-
-    static public int toDegrees(double v) {
-        return (int) (v * (180 / Math.PI));
-    }
-
-    static public boolean thereIsBiggerShipsNear(GameState gameState, GameObject bot) {
-        return !gameStateToBigShipsNear(gameState, bot).isEmpty();
-    }
-
     static public PlayerAction bestAction(GameState gameState, GameObject bot, LocalState localState) {
-        Helper helper = new Helper();
         EarlyGame early = new EarlyGame();
         MidGame mid = new MidGame();
         Avoid avoid = new Avoid();
@@ -73,7 +43,7 @@ public class Greedy {
         }
         else {
             playerAction.action = PlayerActions.FORWARD;
-            int headingToCenter = helper.getHeadingFromCenter(bot) + 180 % 360;
+            int headingToCenter = Helper.getHeadingFromCenter(bot) + 180 % 360;
             int higher = headingToCenter + 45;
             int lower = (headingToCenter - 45 + 360) % 360;
             if (higher > lower) {

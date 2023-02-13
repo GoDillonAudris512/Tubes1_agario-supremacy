@@ -10,6 +10,7 @@ Main.class
 Enums\PlayerActions.class
 Greedy\MidGame.class
 Models\GameState.class
+Greedy\LateGame.class
 Services\BotService.class
 Models\GameStateDto.class
 Greedy\Helper.class

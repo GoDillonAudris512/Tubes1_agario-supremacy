@@ -33,23 +33,22 @@ public class Teleport {
     }
 
     static public PlayerAction fireTeleporterToEnemies(GameState gameState, GameObject bot, LocalState localState) {
-        Helper helper = new Helper();
         PlayerAction playerAction = new PlayerAction();
         GameObject target = getTargetedEnemies(gameState, bot);
 
         int rad = bot.getSize();
-        double dist = helper.getDistanceBetween(target, bot);
-        int alpha = ((helper.getHeadingBetween(target, bot) - target.currentHeading) + 360) % 180;
+        double dist = Helper.getDistanceBetween(target, bot);
+        int alpha = ((Helper.getHeadingBetween(target, bot) - target.currentHeading) + 360) % 180;
         int x = (int) (Math.sqrt((rad*rad) + (dist*dist) - (2*rad*dist*Math.cos(alpha))));
 
         int theta = (int) (Math.asin((rad*Math.sin(alpha))/x));
 
         playerAction.action = PlayerActions.FIRETELEPORT;
-        if (target.currentHeading - helper.getHeadingBetween(target, bot) >= 0) {
-            playerAction.heading = (helper.getHeadingBetween(target, bot) + theta + 360) % 360;
+        if (target.currentHeading - Helper.getHeadingBetween(target, bot) >= 0) {
+            playerAction.heading = (Helper.getHeadingBetween(target, bot) + theta + 360) % 360;
         }
         else {
-            playerAction.heading = (helper.getHeadingBetween(target, bot) - theta + 360) % 360;
+            playerAction.heading = (Helper.getHeadingBetween(target, bot) - theta + 360) % 360;
         }
 
         localState.teleporterFired = true;
@@ -72,29 +71,25 @@ public class Teleport {
     }
 
     static public boolean thereIsSmallerEnemiesAroundTeleporter(GameState gameState, GameObject bot, LocalState localState) {
-        Helper helper = new Helper();
-
         GameObject teleporter = findTeleporter(gameState, localState).get(0);
         var enemies = gameState.getPlayerGameObjects().stream()
                       .filter(item -> (item.getSize() < bot.getSize()))
-                      .filter(item -> (helper.getDistanceBetween(teleporter, item) - bot.getSize() - item.getSize() < 0))
+                      .filter(item -> (Helper.getDistanceBetween(teleporter, item) - bot.getSize() - item.getSize() < 0))
                       .collect(Collectors.toList());
 
         var gasClouds = gameState.getGameObjects().stream()
                         .filter(item -> (item.getGameObjectType() == ObjectTypes.GASCLOUD))
-                        .filter(item -> (helper.getDistanceBetween(teleporter, item) - bot.getSize() < 0 ))
+                        .filter(item -> (Helper.getDistanceBetween(teleporter, item) - bot.getSize() < 0 ))
                         .collect(Collectors.toList());
             
         return !enemies.isEmpty() && gasClouds.isEmpty();
     }
 
     static public boolean thereIsNoLargerEnemiesAroundTeleporter(GameState gameState, GameObject bot, LocalState localState) {
-        Helper helper = new Helper();
-
         GameObject teleporter = findTeleporter(gameState, localState).get(0);
         var enemies = gameState.getPlayerGameObjects().stream()
                 .filter(item -> (item.getSize() > bot.getSize()))
-                .filter(item -> (helper.getDistanceBetween(teleporter, item) - bot.getSize() - item.getSize() < 0))
+                .filter(item -> (Helper.getDistanceBetween(teleporter, item) - bot.getSize() - item.getSize() < 0))
                 .collect(Collectors.toList());
 
         return enemies.isEmpty();
@@ -102,12 +97,11 @@ public class Teleport {
 
     static public PlayerAction teleportToTeleporter(GameState gameState, GameObject bot, LocalState localState) {
         PlayerAction playerAction = new PlayerAction();
-        Helper helper = new Helper();
 
         GameObject teleporter = findTeleporter(gameState, localState).get(0);
         var enemies = gameState.getPlayerGameObjects().stream()
                 .filter(item -> (item.getSize() < bot.getSize()))
-                .filter(item -> (helper.getDistanceBetween(teleporter, item) - bot.getSize() - item.getSize() > 0))
+                .filter(item -> (Helper.getDistanceBetween(teleporter, item) - bot.getSize() - item.getSize() > 0))
                 .collect(Collectors.toList());
 
         playerAction.action = PlayerActions.TELEPORT;
@@ -115,7 +109,7 @@ public class Teleport {
             playerAction.heading = new Random().nextInt(360);
         }
         else {
-            playerAction.heading = helper.getHeadingBetween(enemies.get(0), bot);
+            playerAction.heading = Helper.getHeadingBetween(enemies.get(0), bot);
         }
 
         localState.teleporterFired = false;

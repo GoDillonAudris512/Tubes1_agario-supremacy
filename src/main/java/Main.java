@@ -62,8 +62,19 @@ public class Main {
 
         //This is a blocking call
         hubConnection.start().subscribe(() -> {
+            int prev_tick = -1;
+            GameState gameState = botService.getGameState();
             while (hubConnection.getConnectionState() == HubConnectionState.CONNECTED) {
-                Thread.sleep(90);
+                hubConnection.on("ReceiveGameState", (gameStateDto) -> {
+                    gameState.world.currentTick = gameStateDto.getWorld().getCurrentTick();
+                }, GameStateDto.class);
+                while (gameState.getWorld().currentTick == null) { // Tunggu sampai ada data gametick
+                    Thread.sleep(10);
+                }
+                System.out.println(gameState.getWorld().currentTick);
+                while (gameState.getWorld().currentTick == prev_tick) {
+                    Thread.sleep(10);
+                }
 
                 GameObject bot = botService.getBot();
                 if (bot == null) {
@@ -74,6 +85,7 @@ public class Main {
                 botService.computeNextPlayerAction(botService.getPlayerAction());
                 if (hubConnection.getConnectionState() == HubConnectionState.CONNECTED) {
                     hubConnection.send("SendPlayerAction", botService.getPlayerAction());
+                    prev_tick = gameState.getWorld().getCurrentTick();
                 }
             }
         });
