@@ -1,17 +1,17 @@
-C:\Users\linal\OneDrive - Institut Teknologi Bandung\Folder Kuliah\Sem 4\Stima\Tubes 1\starter-pack\starter-bots\Tubes1_agario-supremacy\src\main\java\Enums\PlayerActions.java
-C:\Users\linal\OneDrive - Institut Teknologi Bandung\Folder Kuliah\Sem 4\Stima\Tubes 1\starter-pack\starter-bots\Tubes1_agario-supremacy\src\main\java\Greedy\Helper.java
-C:\Users\linal\OneDrive - Institut Teknologi Bandung\Folder Kuliah\Sem 4\Stima\Tubes 1\starter-pack\starter-bots\Tubes1_agario-supremacy\src\main\java\Models\PlayerAction.java
-C:\Users\linal\OneDrive - Institut Teknologi Bandung\Folder Kuliah\Sem 4\Stima\Tubes 1\starter-pack\starter-bots\Tubes1_agario-supremacy\src\main\java\Enums\ObjectTypes.java
-C:\Users\linal\OneDrive - Institut Teknologi Bandung\Folder Kuliah\Sem 4\Stima\Tubes 1\starter-pack\starter-bots\Tubes1_agario-supremacy\src\main\java\Models\LocalState.java
-C:\Users\linal\OneDrive - Institut Teknologi Bandung\Folder Kuliah\Sem 4\Stima\Tubes 1\starter-pack\starter-bots\Tubes1_agario-supremacy\src\main\java\Models\World.java
-C:\Users\linal\OneDrive - Institut Teknologi Bandung\Folder Kuliah\Sem 4\Stima\Tubes 1\starter-pack\starter-bots\Tubes1_agario-supremacy\src\main\java\Greedy\Avoid.java
-C:\Users\linal\OneDrive - Institut Teknologi Bandung\Folder Kuliah\Sem 4\Stima\Tubes 1\starter-pack\starter-bots\Tubes1_agario-supremacy\src\main\java\Greedy\Teleport.java
-C:\Users\linal\OneDrive - Institut Teknologi Bandung\Folder Kuliah\Sem 4\Stima\Tubes 1\starter-pack\starter-bots\Tubes1_agario-supremacy\src\main\java\Models\GameState.java
-C:\Users\linal\OneDrive - Institut Teknologi Bandung\Folder Kuliah\Sem 4\Stima\Tubes 1\starter-pack\starter-bots\Tubes1_agario-supremacy\src\main\java\Models\GameObject.java
-C:\Users\linal\OneDrive - Institut Teknologi Bandung\Folder Kuliah\Sem 4\Stima\Tubes 1\starter-pack\starter-bots\Tubes1_agario-supremacy\src\main\java\Greedy\Greedy.java
-C:\Users\linal\OneDrive - Institut Teknologi Bandung\Folder Kuliah\Sem 4\Stima\Tubes 1\starter-pack\starter-bots\Tubes1_agario-supremacy\src\main\java\Models\Position.java
-C:\Users\linal\OneDrive - Institut Teknologi Bandung\Folder Kuliah\Sem 4\Stima\Tubes 1\starter-pack\starter-bots\Tubes1_agario-supremacy\src\main\java\Main.java
-C:\Users\linal\OneDrive - Institut Teknologi Bandung\Folder Kuliah\Sem 4\Stima\Tubes 1\starter-pack\starter-bots\Tubes1_agario-supremacy\src\main\java\Models\GameStateDto.java
-C:\Users\linal\OneDrive - Institut Teknologi Bandung\Folder Kuliah\Sem 4\Stima\Tubes 1\starter-pack\starter-bots\Tubes1_agario-supremacy\src\main\java\Services\BotService.java
-C:\Users\linal\OneDrive - Institut Teknologi Bandung\Folder Kuliah\Sem 4\Stima\Tubes 1\starter-pack\starter-bots\Tubes1_agario-supremacy\src\main\java\Greedy\Food.java
-C:\Users\linal\OneDrive - Institut Teknologi Bandung\Folder Kuliah\Sem 4\Stima\Tubes 1\starter-pack\starter-bots\Tubes1_agario-supremacy\src\main\java\Greedy\Torpedo.java
+C:\Users\user\Documents\Kuliah\Semester 4 Jurusan\Strategi Algoritma\Tubes 1 Stima\starter-bots\Tubes1_agario-supremacy\src\main\java\Greedy\Torpedo.java
+C:\Users\user\Documents\Kuliah\Semester 4 Jurusan\Strategi Algoritma\Tubes 1 Stima\starter-bots\Tubes1_agario-supremacy\src\main\java\Enums\PlayerActions.java
+C:\Users\user\Documents\Kuliah\Semester 4 Jurusan\Strategi Algoritma\Tubes 1 Stima\starter-bots\Tubes1_agario-supremacy\src\main\java\Greedy\Helper.java
+C:\Users\user\Documents\Kuliah\Semester 4 Jurusan\Strategi Algoritma\Tubes 1 Stima\starter-bots\Tubes1_agario-supremacy\src\main\java\Greedy\Food.java
+C:\Users\user\Documents\Kuliah\Semester 4 Jurusan\Strategi Algoritma\Tubes 1 Stima\starter-bots\Tubes1_agario-supremacy\src\main\java\Services\BotService.java
+C:\Users\user\Documents\Kuliah\Semester 4 Jurusan\Strategi Algoritma\Tubes 1 Stima\starter-bots\Tubes1_agario-supremacy\src\main\java\Models\LocalState.java
+C:\Users\user\Documents\Kuliah\Semester 4 Jurusan\Strategi Algoritma\Tubes 1 Stima\starter-bots\Tubes1_agario-supremacy\src\main\java\Models\PlayerAction.java
+C:\Users\user\Documents\Kuliah\Semester 4 Jurusan\Strategi Algoritma\Tubes 1 Stima\starter-bots\Tubes1_agario-supremacy\src\main\java\Main.java
+C:\Users\user\Documents\Kuliah\Semester 4 Jurusan\Strategi Algoritma\Tubes 1 Stima\starter-bots\Tubes1_agario-supremacy\src\main\java\Models\World.java
+C:\Users\user\Documents\Kuliah\Semester 4 Jurusan\Strategi Algoritma\Tubes 1 Stima\starter-bots\Tubes1_agario-supremacy\src\main\java\Models\GameStateDto.java
+C:\Users\user\Documents\Kuliah\Semester 4 Jurusan\Strategi Algoritma\Tubes 1 Stima\starter-bots\Tubes1_agario-supremacy\src\main\java\Greedy\Teleport.java
+C:\Users\user\Documents\Kuliah\Semester 4 Jurusan\Strategi Algoritma\Tubes 1 Stima\starter-bots\Tubes1_agario-supremacy\src\main\java\Enums\ObjectTypes.java
+C:\Users\user\Documents\Kuliah\Semester 4 Jurusan\Strategi Algoritma\Tubes 1 Stima\starter-bots\Tubes1_agario-supremacy\src\main\java\Greedy\Avoid.java
+C:\Users\user\Documents\Kuliah\Semester 4 Jurusan\Strategi Algoritma\Tubes 1 Stima\starter-bots\Tubes1_agario-supremacy\src\main\java\Models\GameObject.java
+C:\Users\user\Documents\Kuliah\Semester 4 Jurusan\Strategi Algoritma\Tubes 1 Stima\starter-bots\Tubes1_agario-supremacy\src\main\java\Greedy\Greedy.java
+C:\Users\user\Documents\Kuliah\Semester 4 Jurusan\Strategi Algoritma\Tubes 1 Stima\starter-bots\Tubes1_agario-supremacy\src\main\java\Models\Position.java
+C:\Users\user\Documents\Kuliah\Semester 4 Jurusan\Strategi Algoritma\Tubes 1 Stima\starter-bots\Tubes1_agario-supremacy\src\main\java\Models\GameState.java
