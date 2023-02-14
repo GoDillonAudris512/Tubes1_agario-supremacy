@@ -1,60 +1,46 @@
 package Greedy;
 
 import java.util.*;
-import java.util.stream.*;
 
 import Enums.*;
 import Models.*;
 
 public class Greedy {
     static public PlayerAction bestAction(GameState gameState, GameObject bot, LocalState localState) {
-        EarlyGame early = new EarlyGame();
-        MidGame mid = new MidGame();
-        Avoid avoid = new Avoid();
-
         PlayerAction playerAction = new PlayerAction();
 
-        if (localState.teleporterFired) {
-            if (Teleport.teleporterStillInWorld(gameState, localState)) {
-                localState.teleporterStillNotAppear = false;
-            }
-            else if (!localState.teleporterStillNotAppear) {
-                localState.teleporterFired = false;
-                localState.teleporterStillNotAppear = true;
-            }
+        playerAction = moveToCenter(playerAction,bot);
+        playerAction = Food.determineFood(gameState,playerAction,bot,localState);
+        playerAction = Torpedo.determineTorpedo(gameState,playerAction,bot);
+        playerAction = Avoid.determineAvoid(gameState, playerAction, bot, localState);
+        playerAction = Teleport.determineTeleport(gameState, playerAction, bot, localState);
+
+        if (playerAction.action == PlayerActions.ACTIVATESHIELD) {
+            System.out.println("Shield activate");
+        }
+        else if (playerAction.action == PlayerActions.TELEPORT) {
+            System.out.println("Teleported");
+        }
+        else if (playerAction.action == PlayerActions.FIRETORPEDOES) {
+            System.out.println("Fired Torpedoes");
+        }
+        else if (playerAction.action == PlayerActions.FIRETELEPORT) {
+            System.out.println("Fired Teleport");
+        }
+        return playerAction;
+    }
+
+    static private PlayerAction moveToCenter(PlayerAction playerAction, GameObject bot) {
+        playerAction.action = PlayerActions.FORWARD;
+        int headingToCenter = Helper.getHeadingFromCenter(bot) + 180 % 360;
+        int higher = headingToCenter + 45;
+        int lower = (headingToCenter - 45 + 360) % 360;
+        if (higher > lower) {
+            playerAction.heading = new Random().nextInt(lower, higher);
+        } else {
+            playerAction.heading = (new Random().nextInt(higher, lower + 360)) % 360;
         }
 
-        if (!localState.teleporterStillNotAppear && Teleport.thereIsSmallerEnemiesAroundTeleporter(gameState, bot, localState) && localState.tpReason == 1) {
-            playerAction = Teleport.teleportToTeleporter(gameState, bot, localState);
-        }
-        else if (Teleport.isBotTheBiggest(gameState, bot) && Teleport.thereIsSmallerEnemies(gameState, bot) && !localState.teleporterFired && bot.teleporterCount > 0 && bot.getSize() > 70){
-            playerAction = Teleport.fireTeleporterToEnemies(gameState, bot, localState);
-        }
-        else if (mid.bigShipInRadius(gameState, bot) && bot.torpedoSalvoCount > 0 && bot.getSize() > 45) {
-            playerAction = mid.stealSizeWithTorpedo(gameState, bot);
-        }
-        else if (!early.getFoodInGame(gameState, bot).isEmpty()) {
-            if (early.botInSector(gameState, bot, localState) && !early.getFoodInSector(gameState, bot, localState).isEmpty()) {
-                playerAction = early.getNearestFoodInSector(gameState, bot, localState);
-            }
-            else {
-                playerAction = early.getNearestFood(gameState, bot);
-            }
-        }
-        else {
-            playerAction.action = PlayerActions.FORWARD;
-            int headingToCenter = Helper.getHeadingFromCenter(bot) + 180 % 360;
-            int higher = headingToCenter + 45;
-            int lower = (headingToCenter - 45 + 360) % 360;
-            if (higher > lower) {
-                playerAction.heading = new Random().nextInt(lower, higher);
-            }
-            else {
-                playerAction.heading = (new Random().nextInt(higher, lower+360)) % 360;
-            }
-        }
-
-        avoid.determineAction(gameState,playerAction,bot,localState);
         return playerAction;
     }
 }

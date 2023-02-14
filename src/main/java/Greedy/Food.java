@@ -6,8 +6,21 @@ import java.util.stream.*;
 import Enums.*;
 import Models.*;
 
-public class EarlyGame {
-    public void setFoodSector(GameState gameState, GameObject bot, LocalState localState) {
+public class Food {
+    static public PlayerAction determineFood (GameState gameState, PlayerAction playerAction, GameObject bot, LocalState localState) {
+        if (!getFoodInGame(gameState, bot).isEmpty()) {
+//            if (localState.targetCategory != ObjectTypes.FOOD || localState.target == null) {
+                if (botInSector(gameState, bot, localState) && !getFoodInSector(gameState, bot, localState).isEmpty()) {
+                    playerAction = getNearestFoodInSector(gameState, bot, localState);
+                } else {
+                    playerAction = getNearestFood(gameState, bot, localState);
+                }
+//            }
+        }
+        return playerAction;
+    }
+
+    static public void setFoodSector(GameState gameState, GameObject bot, LocalState localState) {
         int relativeAngleToCenter = Helper.getHeadingFromCenter(bot);
         Integer halfSectorAngle = (int) (360 / (2*gameState.getPlayerGameObjects().size()));
 
@@ -16,7 +29,7 @@ public class EarlyGame {
         localState.specialSector = localState.higherHeadingBase < localState.lowerHeadingBase;
     }
 
-    public List<GameObject> getFoodInSector (GameState gameState, GameObject bot, LocalState localState) {
+    static private List<GameObject> getFoodInSector (GameState gameState, GameObject bot, LocalState localState) {
         List<GameObject> foodList;
 
         if (localState.specialSector) {
@@ -40,7 +53,7 @@ public class EarlyGame {
         return foodList;
     }
 
-    public List<GameObject> getFoodInGame (GameState gameState, GameObject bot) {
+    static private List<GameObject> getFoodInGame (GameState gameState, GameObject bot) {
         List<GameObject> foodList;
 
         foodList = gameState.getGameObjects().stream()
@@ -52,27 +65,31 @@ public class EarlyGame {
         return foodList;
     }
 
-    public PlayerAction getNearestFoodInSector (GameState gameState, GameObject bot, LocalState localState) {
+    static private PlayerAction getNearestFoodInSector (GameState gameState, GameObject bot, LocalState localState) {
         List<GameObject> foodList = getFoodInSector(gameState, bot, localState);
 
         PlayerAction playerAction = new PlayerAction();
         playerAction.action =  PlayerActions.FORWARD;
         playerAction.heading = Helper.getHeadingBetween(foodList.get(0), bot);
 
+//        localState.target = foodList.get(0);
+//        localState.targetCategory = ObjectTypes.FOOD;
         return playerAction;
     }
 
-    public PlayerAction getNearestFood (GameState gameState, GameObject bot){
+    static private PlayerAction getNearestFood (GameState gameState, GameObject bot, LocalState localState){
         List<GameObject> foodList = getFoodInGame(gameState, bot);
 
         PlayerAction playerAction = new PlayerAction();
         playerAction.action =  PlayerActions.FORWARD;
         playerAction.heading = Helper.getHeadingBetween(foodList.get(0), bot);
 
+//        localState.target = foodList.get(0);
+//        localState.targetCategory = ObjectTypes.FOOD;
         return playerAction;
     }
 
-    public boolean botInSector(GameState gameState, GameObject bot, LocalState localState) {
+    static private boolean botInSector(GameState gameState, GameObject bot, LocalState localState) {
         int headingFromCenter = Helper.getHeadingFromCenter(bot);
 
         if (localState.specialSector) {

@@ -65,16 +65,16 @@ public class Main {
             int prev_tick = -1;
             GameState gameState = botService.getGameState();
             while (hubConnection.getConnectionState() == HubConnectionState.CONNECTED) {
-                hubConnection.on("ReceiveGameState", (gameStateDto) -> {
-                    gameState.world.currentTick = gameStateDto.getWorld().getCurrentTick();
-                }, GameStateDto.class);
-                while (gameState.getWorld().currentTick == null) { // Tunggu sampai ada data gametick
-                    Thread.sleep(10);
-                }
-                System.out.println(gameState.getWorld().currentTick);
-                while (gameState.getWorld().currentTick == prev_tick) {
-                    Thread.sleep(10);
-                }
+//                hubConnection.on("ReceiveGameState", (gameStateDto) -> {
+//                    gameState.world.currentTick = gameStateDto.getWorld().getCurrentTick();
+//                }, GameStateDto.class);
+//                while (gameState.getWorld().getCurrentTick() == null) {
+//                    Thread.sleep(10);
+//                }
+//                while(gameState.getWorld().getCurrentTick() == prev_tick) {
+//                    Thread.sleep(1);
+//                }
+                Thread.sleep(90);
 
                 GameObject bot = botService.getBot();
                 if (bot == null) {
@@ -85,7 +85,7 @@ public class Main {
                 botService.computeNextPlayerAction(botService.getPlayerAction());
                 if (hubConnection.getConnectionState() == HubConnectionState.CONNECTED) {
                     hubConnection.send("SendPlayerAction", botService.getPlayerAction());
-                    prev_tick = gameState.getWorld().getCurrentTick();
+//                    prev_tick = gameState.getWorld().getCurrentTick();
                 }
             }
         });

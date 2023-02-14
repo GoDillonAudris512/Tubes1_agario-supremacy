@@ -35,10 +35,9 @@ public class BotService {
     }
 
     public void computeNextPlayerAction(PlayerAction playerAction) {
-        EarlyGame early = new EarlyGame();
 
         if (!init && !gameState.getPlayerGameObjects().isEmpty()) {
-            early.setFoodSector(gameState, bot, localState);
+            Food.setFoodSector(gameState, bot, localState);
             init = true;
         }
 

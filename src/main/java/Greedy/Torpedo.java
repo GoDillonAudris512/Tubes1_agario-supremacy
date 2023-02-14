@@ -6,8 +6,14 @@ import Models.*;
 import java.util.*;
 import java.util.stream.*;
 
-public class MidGame {
-    private List<GameObject> getListOfNearShips(GameState gameState, GameObject bot) {
+public class Torpedo {
+    static public PlayerAction determineTorpedo(GameState gameState, PlayerAction playerAction, GameObject bot) {
+        if(bigShipInRadius(gameState, bot) &&bot.torpedoSalvoCount > 0 && bot.getSize()>45) {
+            playerAction = stealSizeWithTorpedo(gameState, bot);
+        }
+        return playerAction;
+    }
+    static private List<GameObject> getListOfNearShips(GameState gameState, GameObject bot) {
         return gameState.getPlayerGameObjects().stream()
                .filter(item -> item.getId() != bot.getId())
                .filter(item -> item.getSize() >= bot.getSize())
@@ -17,11 +23,11 @@ public class MidGame {
                .collect(Collectors.toList());
     }
 
-    public boolean bigShipInRadius(GameState gameState, GameObject bot) {
+    static public boolean bigShipInRadius(GameState gameState, GameObject bot) {
         return !getListOfNearShips(gameState, bot).isEmpty();    
     }
 
-    public PlayerAction stealSizeWithTorpedo(GameState gameState, GameObject bot) {
+    static public PlayerAction stealSizeWithTorpedo(GameState gameState, GameObject bot) {
         PlayerAction playerAction = new PlayerAction();
 
         List<GameObject> enemies = getListOfNearShips(gameState, bot);

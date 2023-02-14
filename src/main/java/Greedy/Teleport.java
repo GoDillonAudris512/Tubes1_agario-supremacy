@@ -7,32 +7,36 @@ import Enums.*;
 import Models.*;
 
 public class Teleport {
-    static private List<GameObject> getListOfSmallEnemies(GameState gameState, GameObject bot) {
-        return gameState.getPlayerGameObjects().stream()
-                .filter(item -> (item.getId() != bot.getId()))
-                .filter(item -> (item.getSize() < bot.getSize()-30))
-                .sorted(Comparator.comparing(item -> (item.getSize())))
-                .collect(Collectors.toList());
+    static public PlayerAction determineTeleport(GameState gameState, PlayerAction playerAction, GameObject bot, LocalState localState) {
+        if (localState.teleporterFired) {
+            if (teleporterStillInWorld(gameState, localState)) {
+                localState.teleporterStillNotAppear = false;
+            }
+            else if (!localState.teleporterStillNotAppear) {
+                localState.teleporterFired = false;
+                localState.teleporterStillNotAppear = true;
+            }
+        }
+
+        if (!localState.teleporterStillNotAppear && ((thereIsSmallerEnemiesAroundTeleporter(gameState, bot, localState) && localState.tpReason == 1) || (thereIsNoLargerEnemiesAroundTeleporter(gameState, bot, localState) && tpFarEnough(gameState, bot, localState) && localState.tpReason == 2))) {
+            playerAction = Teleport.teleportToTeleporter(gameState, bot, localState);
+        }
+        else if (Helper.isBotTheBiggest(gameState, bot) && thereIsSmallerEnemies(gameState, bot) && !localState.teleporterFired && bot.teleporterCount > 0 && bot.getSize() > 70 && playerAction.action != PlayerActions.ACTIVATESHIELD) {
+            playerAction = Teleport.fireTeleporterToEnemies(gameState, bot, localState);
+        }
+        return playerAction;
     }
 
     static private GameObject getTargetedEnemies(GameState gameState, GameObject bot) {
-        var enemiesList = getListOfSmallEnemies(gameState, bot);
+        var enemiesList = Helper.getListOfSmallEnemies(gameState, bot);
         return enemiesList.get(enemiesList.size()-1);
     }
 
-    static public boolean thereIsSmallerEnemies(GameState gameState, GameObject bot) {
-        return !getListOfSmallEnemies(gameState, bot).isEmpty();
+    static private boolean thereIsSmallerEnemies(GameState gameState, GameObject bot) {
+        return !Helper.getListOfSmallEnemies(gameState, bot).isEmpty();
     }
 
-    static public boolean isBotTheBiggest(GameState gameState, GameObject bot) {
-        var player = gameState.getPlayerGameObjects().stream()
-                .sorted(Comparator.comparing(item -> item.getSize()))
-                .collect(Collectors.toList());
-
-        return player.get(player.size()-1).getId() == bot.getId();
-    }
-
-    static public PlayerAction fireTeleporterToEnemies(GameState gameState, GameObject bot, LocalState localState) {
+    static private PlayerAction fireTeleporterToEnemies(GameState gameState, GameObject bot, LocalState localState) {
         PlayerAction playerAction = new PlayerAction();
         GameObject target = getTargetedEnemies(gameState, bot);
 
@@ -66,11 +70,11 @@ public class Teleport {
                 .collect(Collectors.toList());
     }
 
-    static public boolean teleporterStillInWorld(GameState gameState, LocalState localState) {
+    static private boolean teleporterStillInWorld(GameState gameState, LocalState localState) {
         return !findTeleporter(gameState, localState).isEmpty();
     }
 
-    static public boolean thereIsSmallerEnemiesAroundTeleporter(GameState gameState, GameObject bot, LocalState localState) {
+    static private boolean thereIsSmallerEnemiesAroundTeleporter(GameState gameState, GameObject bot, LocalState localState) {
         GameObject teleporter = findTeleporter(gameState, localState).get(0);
         var enemies = gameState.getPlayerGameObjects().stream()
                       .filter(item -> (item.getSize() < bot.getSize()))
@@ -85,17 +89,27 @@ public class Teleport {
         return !enemies.isEmpty() && gasClouds.isEmpty();
     }
 
-    static public boolean thereIsNoLargerEnemiesAroundTeleporter(GameState gameState, GameObject bot, LocalState localState) {
+    static private boolean thereIsNoLargerEnemiesAroundTeleporter(GameState gameState, GameObject bot, LocalState localState) {
         GameObject teleporter = findTeleporter(gameState, localState).get(0);
         var enemies = gameState.getPlayerGameObjects().stream()
                 .filter(item -> (item.getSize() > bot.getSize()))
-                .filter(item -> (Helper.getDistanceBetween(teleporter, item) - bot.getSize() - item.getSize() < 0))
+                .filter(item -> (Helper.getDistanceBetween(teleporter, item) - bot.getSize() < 10))
                 .collect(Collectors.toList());
-
         return enemies.isEmpty();
     }
 
-    static public PlayerAction teleportToTeleporter(GameState gameState, GameObject bot, LocalState localState) {
+    static private boolean tpFarEnough(GameState gameState, GameObject bot, LocalState localState) {
+        GameObject teleporter = findTeleporter(gameState, localState).get(0);
+        var enemies = gameState.getPlayerGameObjects().stream()
+                        .sorted(Comparator.comparing(item -> item.getSize()))
+                        .collect(Collectors.toList());
+        if (Helper.getDistanceBetween(teleporter, bot) - bot.getSize()*2 - enemies.get(enemies.size()-1).size  > 10) {
+            System.out.println("Far enough");
+        }
+        return (Helper.getDistanceBetween(teleporter, bot) - bot.getSize()*2 - enemies.get(enemies.size()-1).size  > 10);
+    }
+
+    static private PlayerAction teleportToTeleporter(GameState gameState, GameObject bot, LocalState localState) {
         PlayerAction playerAction = new PlayerAction();
 
         GameObject teleporter = findTeleporter(gameState, localState).get(0);
@@ -104,6 +118,11 @@ public class Teleport {
                 .filter(item -> (Helper.getDistanceBetween(teleporter, item) - bot.getSize() - item.getSize() > 0))
                 .collect(Collectors.toList());
 
+        if (localState.tpReason == 1) {
+            System.out.println("TP makan");
+        } else if (localState.tpReason == 2) {
+            System.out.println("TP kabur");
+        }
         playerAction.action = PlayerActions.TELEPORT;
         if (enemies.isEmpty()) {
             playerAction.heading = new Random().nextInt(360);
