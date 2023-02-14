@@ -103,9 +103,6 @@ public class Teleport {
         var enemies = gameState.getPlayerGameObjects().stream()
                         .sorted(Comparator.comparing(item -> item.getSize()))
                         .collect(Collectors.toList());
-        if (Helper.getDistanceBetween(teleporter, bot) - bot.getSize()*2 - enemies.get(enemies.size()-1).size  > 10) {
-            System.out.println("Far enough");
-        }
         return (Helper.getDistanceBetween(teleporter, bot) - bot.getSize()*2 - enemies.get(enemies.size()-1).size  > 10);
     }
 
@@ -118,11 +115,6 @@ public class Teleport {
                 .filter(item -> (Helper.getDistanceBetween(teleporter, item) - bot.getSize() - item.getSize() > 0))
                 .collect(Collectors.toList());
 
-        if (localState.tpReason == 1) {
-            System.out.println("TP makan");
-        } else if (localState.tpReason == 2) {
-            System.out.println("TP kabur");
-        }
         playerAction.action = PlayerActions.TELEPORT;
         if (enemies.isEmpty()) {
             playerAction.heading = new Random().nextInt(360);

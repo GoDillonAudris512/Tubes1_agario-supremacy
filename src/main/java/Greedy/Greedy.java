@@ -14,19 +14,6 @@ public class Greedy {
         playerAction = Torpedo.determineTorpedo(gameState,playerAction,bot);
         playerAction = Avoid.determineAvoid(gameState, playerAction, bot, localState);
         playerAction = Teleport.determineTeleport(gameState, playerAction, bot, localState);
-
-        if (playerAction.action == PlayerActions.ACTIVATESHIELD) {
-            System.out.println("Shield activate");
-        }
-        else if (playerAction.action == PlayerActions.TELEPORT) {
-            System.out.println("Teleported");
-        }
-        else if (playerAction.action == PlayerActions.FIRETORPEDOES) {
-            System.out.println("Fired Torpedoes");
-        }
-        else if (playerAction.action == PlayerActions.FIRETELEPORT) {
-            System.out.println("Fired Teleport");
-        }
         return playerAction;
     }
 
