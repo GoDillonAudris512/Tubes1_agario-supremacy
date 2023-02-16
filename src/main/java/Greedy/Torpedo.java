@@ -17,7 +17,7 @@ public class Torpedo {
         return gameState.getPlayerGameObjects().stream()
                .filter(item -> item.getId() != bot.getId())
                .filter(item -> item.getSpeed() <= 8)
-               .filter(item -> Helper.getDistanceBetween(item, bot) - item.getSize() - bot.getSize() < 260)
+               .filter(item -> Helper.getDistanceBetween(item, bot) - item.getSize() - bot.getSize() < 360)
                .filter(item -> item.effects < 16)
                .sorted(Comparator.comparing(item -> Helper.getDistanceBetween(item, bot)))
                .collect(Collectors.toList());
