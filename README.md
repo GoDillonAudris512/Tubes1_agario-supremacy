@@ -99,7 +99,7 @@ Setelah setup berhasil dilakukan, ikuti langkah dibawah untuk menjalankan progra
 2. Pindahkan repository ini ke file starter-bots
 3. Jika source code belum dibuild menjadi file jar, maka buka terminal pada directory repository dan jalankan command
    "mvn clean package"
-4. Setelah source code dibuild menjadi file jar, maka edit file run.bat atau run.sh menjadi seperti script berikut
+4. Setelah source code dibuild menjadi file jar, maka edit file run.bat atau run.sh menjadi seperti script berikut. Kemudian jalankan.
 
 ```bash
 @echo off
@@ -143,4 +143,5 @@ Proyek ini telah selesai secara utuh (Completed)
 
 ## Contacts
 Diciptakan dan diatur oleh agario supremacy
+
 ![image](https://user-images.githubusercontent.com/110383663/219682243-5d98ee40-89df-4c38-bf32-98b939b79aa4.png)
