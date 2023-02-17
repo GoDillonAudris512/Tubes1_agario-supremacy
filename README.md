@@ -21,8 +21,8 @@ Contributors:
 - 13521063 Salomo Reinhart Gregory Manalu
 - 13521172 Nathan Tenka
 
-## Languange Used
-- Java Languange (99.2%)
+## Language Used
+- Java Language (99.2%)
 - Dockerfile (0.8%)
 
 ## Strategy
@@ -41,7 +41,7 @@ Strategi Algoritma Greedy yang diterapkan pada bot kami adalah strategi greedy b
 │   README.md
 │   
 ├───doc
-│      agario supremacy.pdf
+│      Tubes1_K2_13521062, 13521063, 13521172_agario supremacy.pdf
 │
 ├───src/main/java
 │   │
