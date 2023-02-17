@@ -14,6 +14,9 @@ public class Greedy {
         playerAction = Torpedo.determineTorpedo(gameState,playerAction,bot);
         playerAction = Avoid.determineAvoid(gameState, playerAction, bot, localState);
         playerAction = Teleport.determineTeleport(gameState, playerAction, bot, localState);
+
+        Helper.printBotState(gameState, bot, playerAction);
+
         return playerAction;
     }
 

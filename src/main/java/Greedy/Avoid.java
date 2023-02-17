@@ -35,8 +35,8 @@ public class Avoid {
     static private PlayerAction avoidLargerEnemy(GameState gameState, PlayerAction playerAction, GameObject bot, LocalState localState) {
          if (Helper.thereIsBiggerShipsNear(gameState,bot)) {
              var enemyList = Helper.gameStateToBigShipsNear(gameState,bot);
-             playerAction.heading = (Helper.getHeadingBetween(enemyList.get(0),bot) + 180) % 360;
              if (bot.torpedoSalvoCount == 0 && !localState.teleporterFired) {
+                playerAction.heading = (Helper.getHeadingBetween(enemyList.get(0),bot) + 180) % 360;
                  if (bot.teleporterCount > 0 && bot.getSize() - 20 > 15) {
                      playerAction.action = PlayerActions.FIRETELEPORT;
                      localState.teleporterFired = true;

@@ -6,6 +6,7 @@ Models\PlayerAction.class
 Greedy\Teleport.class
 Models\GameObject.class
 Greedy\Greedy.class
+Greedy\Helper$1.class
 Main.class
 Enums\PlayerActions.class
 Greedy\Food.class

@@ -8,7 +8,7 @@ import java.util.stream.*;
 
 public class Torpedo {
     static public PlayerAction determineTorpedo(GameState gameState, PlayerAction playerAction, GameObject bot) {
-        if(bigShipInRadius(gameState, bot) &&bot.torpedoSalvoCount > 0 && bot.getSize()>45) {
+        if(bigShipInRadius(gameState, bot) && bot.torpedoSalvoCount > 0 && bot.getSize()>18) {
             playerAction = stealSizeWithTorpedo(gameState, bot);
         }
         return playerAction;

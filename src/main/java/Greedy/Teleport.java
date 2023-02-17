@@ -21,7 +21,7 @@ public class Teleport {
         if (!localState.teleporterStillNotAppear && ((thereIsSmallerEnemiesAroundTeleporter(gameState, bot, localState) && localState.tpReason == 1) || (thereIsNoLargerEnemiesAroundTeleporter(gameState, bot, localState) && tpFarEnough(gameState, bot, localState) && localState.tpReason == 2))) {
             playerAction = Teleport.teleportToTeleporter(gameState, bot, localState);
         }
-        else if (Helper.isBotTheBiggest(gameState, bot) && thereIsSmallerEnemies(gameState, bot) && !localState.teleporterFired && bot.teleporterCount > 0 && bot.getSize() > 70 && playerAction.action != PlayerActions.ACTIVATESHIELD) {
+        else if (Helper.isBotTheBiggest(gameState, bot) && thereIsSmallerEnemies(gameState, bot) && !localState.teleporterFired && bot.teleporterCount > 0 && bot.getSize() > 45 && playerAction.action != PlayerActions.ACTIVATESHIELD) {
             playerAction = Teleport.fireTeleporterToEnemies(gameState, bot, localState);
         }
         return playerAction;

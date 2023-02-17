@@ -6,6 +6,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import Enums.PlayerActions;
+
 public class Helper {
     static public double getDistanceBetween(GameObject object1, GameObject object2) {
         var triangleX = Math.abs(object1.getPosition().x - object2.getPosition().x);
@@ -62,5 +64,47 @@ public class Helper {
                 .collect(Collectors.toList());
 
         return player.get(player.size()-1).getId() == bot.getId();
+    }
+
+    static public void printBotState(GameState gameState, GameObject bot, PlayerAction playerAction) {
+        System.out.println("==============================================================");
+        System.out.printf("Current Tick    : %d\n", gameState.world.currentTick);
+        System.out.printf("Size            : %d\n", bot.size);
+        System.out.printf("Current heading : %d\n", bot.currentHeading);
+        System.out.printf("Position        : %d, %d\n", bot.position.x, bot.position.y);
+        switch(playerAction.action) {
+            case FORWARD:
+                System.out.println("Action          : FORWARD");
+                break;
+            case STOP:
+                System.out.println("Action          : STOP");
+                break;
+            case STARTAFTERBURNER:
+                System.out.println("Action          : START_AFTERBURNER");
+                break;
+            case STOPAFTERBURNER:
+                System.out.println("Action          : STOP_AFTERBURNER");
+                break;
+            case FIRETORPEDOES:
+                System.out.println("Action          : FIRE_TORPEDOES");
+                break;
+            case FIRESUPERNOVA:
+                System.out.println("Action          : FIRE_SUPERNOVA");
+                break;
+            case DETONATESUPERNOVA:
+                System.out.println("Action          : DETONATE_SUPERNOVA");
+                break;
+            case FIRETELEPORT:
+                System.out.println("Action          : FIRE_TELEPORT");
+                break;
+            case TELEPORT:
+                System.out.println("Action          : TELEPORT");
+                break;
+            case ACTIVATESHIELD:
+                System.out.println("Action          : ACTIVATE_SHIELD");
+                break;
+                
+        }
+        System.out.printf(        "Action heading  : %d\n", playerAction.heading);
     }
 }
