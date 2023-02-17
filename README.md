@@ -34,6 +34,8 @@ Strategi Algoritma Greedy yang diterapkan pada bot kami adalah strategi greedy b
 5. Bergerak menuju ke tengah atau pusat world
 
 ## Screenshots
+![image](https://user-images.githubusercontent.com/110383663/219682604-76561b2f-6049-4cc2-aeea-4d4f6f9af35a.png)
+
 
 ## Repository Structure
 ```bash
@@ -141,3 +143,4 @@ Proyek ini telah selesai secara utuh (Completed)
 
 ## Contacts
 Diciptakan dan diatur oleh agario supremacy
+![image](https://user-images.githubusercontent.com/110383663/219682243-5d98ee40-89df-4c38-bf32-98b939b79aa4.png)
